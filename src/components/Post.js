@@ -1,4 +1,5 @@
 import { ListGroup } from "react-bootstrap"
+import timestampToStr from "../plugins/timestamp"
 
 const Post = (props) => {
   if (props.data.deleted) {
@@ -10,7 +11,7 @@ const Post = (props) => {
         <h4 style={{ fontSize: 22, marginBottom: 5 }}>{props.data.message}</h4>
         <div style={{ display: "inline", overflowWrap: "break-word" }}>
           <span style={{ fontSize: 16, marginRight: 20 }}>{props.data.name}</span>
-          <span style={{ fontSize: 13, color: "#A9D159", marginRight: 20 }}>{props.data.createdAt}</span>
+          <span style={{ fontSize: 13, color: "#A9D159", marginRight: 20 }}>{timestampToStr(props.data.createdAt)}</span>
           <span style={{ fontSize: 13, color: "#D16359", marginRight: 20 }}>{props.data.trip ? props.data.trip : ""}</span>
         </div>
         <div className="btn-group mr-2 btn-group-sm btn-s ml-auto" role="group"
