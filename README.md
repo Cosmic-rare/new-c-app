@@ -1,7 +1,7 @@
 # new-c-app
 最新版のChat-app
 
-
+[サンプル](https://youtu.be/G_dDiPFDlc8)
 
 - "/" index
 - "/login" Login

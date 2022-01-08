@@ -50,6 +50,12 @@ const postSchema =  mongoose.Schema({
   message: {
     type: String,
     required: true
+  },
+
+  // チャンネルのID
+  roomId: {
+    type: Number,
+    required: true
   }
 })
 
