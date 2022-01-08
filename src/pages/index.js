@@ -1,6 +1,8 @@
-import { Form, ListGroup, Button, Row, Col } from "react-bootstrap"
+import { ListGroup } from "react-bootstrap"
+import Rooms from "../components/rooms"
 
 const Index = () => {
+
   return (
     <div style={{
       padding: 15,
@@ -11,10 +13,10 @@ const Index = () => {
     }}>
 
       <ListGroup>
-            <ListGroup.Item variant="primary"><Button variant="secondary" size="sm">OPEN</Button>{" | "}<p style={{ display: "inline" }}>Mainのルーム</p><p style={{ marginBottom: 0 }}>最新投稿の時間</p></ListGroup.Item>
-            <ListGroup.Item variant="primary"><Button variant="secondary" size="sm">OPEN</Button>{" | "}<p style={{ display: "inline" }}>Subのルーム</p><p style={{ marginBottom: 0 }}>最新投稿の時間</p></ListGroup.Item>
+        <Rooms roomId={1} roomName={"Main"} postTime={"2022/01/08(土) 12:32"}/>
+        <Rooms roomId={2} roomName={"Sub"} postTime={"2022/01/08(土) 13:12"}/>
       </ListGroup>
-      
+
     </div >
   )
 }

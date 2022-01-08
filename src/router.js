@@ -1,4 +1,4 @@
-import { 
+import {
   BrowserRouter,
   Routes,
   Route
@@ -7,17 +7,25 @@ import App from "./App"
 import Login from "./pages/login"
 import Index from "./pages/index"
 import Chat from "./pages/chat"
+import Private from "./components/private"
 
 const Router = () => {
-  return(
+  return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
           <Route path="login" element={<Login />} />
-          <Route path="channels">
-            <Route path=":roomId" element={<Chat />} />
+
+          <Route element={<Private auth={true} />}>
+
+            <Route path="channels">
+              <Route path=":roomId" element={<Chat />} />
+            </Route>
+
+            <Route index element={<Index />} />
+
           </Route>
-          <Route index element={<Index />} />
+
         </Route>
       </Routes>
     </BrowserRouter>
