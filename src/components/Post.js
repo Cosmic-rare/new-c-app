@@ -8,7 +8,9 @@ const Post = (props) => {
 
     return (
       <ListGroup.Item id={props.data.id} style={{ whiteSpace: "pre-wrap" }}>
-        <h4 style={{ fontSize: 22, marginBottom: 5 }}>{props.data.message}</h4>
+        <div>
+          <h4 style={{ fontSize: 22, marginBottom: 5, overflowWrap: "break-word" }}>{props.data.message}</h4>
+        </div>
         <div style={{ display: "inline", overflowWrap: "break-word" }}>
           <span style={{ fontSize: 16, marginRight: 20 }}>{props.data.name}</span>
           <span style={{ fontSize: 13, color: "#A9D159", marginRight: 20 }}>{timestampToStr(props.data.createdAt)}</span>
