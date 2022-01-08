@@ -11,31 +11,36 @@ const io = require("socket.io")(http, {
 app.use(cors())
 app.use(require("express").json())
 
-app.get("/", (req, res) => {
-
-res.send("klhdfs")
-})
+let messages = []
 
 mongoose.connect("mongodb://localhost/c-app")
 const db = mongoose.connection
 db.on("error", (e) => console.log(e))
 db.once("open", () => console.log("Conecting DB"))
 
-// const rooms = io.of(/^\/d*$/)
+const savePost = async (name, message) => {
+  const splitedName = name.split("$")
+  const post = new Post({
+    id: await Post.count(),
+    name: splitedName[0],
+    trip: splitedName[1] ? crypto.createHash('md5').update(splitedName[1]).digest('hex').slice(0, 7) : "",
+    message: message,
+    createdAt: Date.now()
+  })
+
+  const savedPost = await post.save()
+  return savedPost
+}
+
 const rooms = io.of(/^\/.*$/)
-rooms.on("connection", (socket) => {
+rooms.on("connection", async (socket) => {
   const room = socket.nsp
+  room.emit("return", await Post.find().limit(100).sort({ createdAt: -1 }))
 
-  console.log(room.name)
-  socket.emit("returnMessage",
-    { "_id": "61d6cfa6ec717945ee4f4076", "id": 19, "name": "tani", "trip": "092e376", "deleted": false, "edited": false, "createdAt": 1641467814815, "editedMessage": [], "message": "うーん", "__v": 0 }
-  )
-
-  setTimeout(() => {
-    socket.emit("returnMessage",
-      { "_id": "61d6cfa6ec717945ee4f4076", "id": 20, "name": "tani", "trip": "092e376", "deleted": false, "edited": false, "createdAt": 1641467814815, "editedMessage": [], "message": "うーん????", "__v": 0 }
-    )
-  }, 1000)
+  socket.on("send", async (message) => {
+    await savePost("谷", message)
+    room.emit("return", await Post.find().limit(100).sort({ createdAt: -1 }))
+  })
 
 })
 
