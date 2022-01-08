@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "最新版のChat-app",
   "scripts": {
-    "start": "react-scripts start"
+    "start": "react-scripts start",
+    "build": "react-scripts build"
   },
   "keywords": [],
   "author": "",
