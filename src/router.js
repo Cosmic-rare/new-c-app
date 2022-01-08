@@ -7,7 +7,6 @@ import App from "./App"
 import Login from "./pages/login"
 import Index from "./pages/index"
 import Chat from "./pages/chat"
-import DM from "./pages/dm"
 
 const Router = () => {
   return(
@@ -17,9 +16,6 @@ const Router = () => {
           <Route path="login" element={<Login />} />
           <Route path="channels">
             <Route path=":roomId" element={<Chat />} />
-          </Route>
-          <Route path="direct">
-            <Route path=":partnerId" element={<DM />} />
           </Route>
           <Route index element={<Index />} />
         </Route>
