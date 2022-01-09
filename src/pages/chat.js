@@ -1,6 +1,6 @@
 import Post from "../components/Post"
 import TextareaAutosize from "react-textarea-autosize"
-import { Button } from "react-bootstrap"
+import { Button, ListGroup, Alert } from "react-bootstrap"
 import { useEffect, useRef, useState } from "react"
 import io from "socket.io-client"
 import { useParams } from "react-router-dom"
@@ -9,12 +9,14 @@ import { useParams } from "react-router-dom"
 const Chat = () => {
   const [datas, setDatas] = useState(null)
   const [message, setMessage] = useState("")
+  const [sendNow, setSendNow] = useState(false)
 
   let params = useParams()
   const socketRef = useRef()
 
   useEffect(() => {
     socketRef.current = io(`localhost:4000/${params.roomId}`)
+    // socketRef.current = io(`new-c-app.herokuapp.com/${params.roomId}`)
     socketRef.current.on("return", (messages) => {
       setDatas(messages)
     })
@@ -26,7 +28,9 @@ const Chat = () => {
     } else if (message == "") {
       console.log("から文字")
     } else {
+      setSendNow(true)
       socketRef.current.emit("send", message)
+      setSendNow(false)
       setMessage("")
     }
   }
@@ -41,7 +45,22 @@ const Chat = () => {
   } else {
     return (
       <div className="container col-12 col-md-9 col-xl-7">
-        <TextareaAutosize className="form-control" value={message} onChange={(e) => setMessage(e.target.value)} />
+        <TextareaAutosize
+          className="form-control"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key == 'Enter') {
+              if (e.shiftKey) {
+                console.log("ShiftEnter")
+              } else {
+                sendMessage()
+                e.preventDefault()
+                setMessage("")
+              }
+            }
+          }}
+        />
         <hr />
         <div className="d-grid gap-2">
           <Button variant="primary" size="sm" onClick={() => sendMessage()}>
@@ -49,12 +68,16 @@ const Chat = () => {
           </Button>
         </div>
         <hr />
-        {
-          datas.map((value) => {
-            return (
-              <Post data={value} style={{ paddingBottom: 20 }} key={value.id} />
-            )
-          })
+        
+        <Alert variant="info" show={sendNow} style={{ padding: 0, border: "None" }}>
+          <p style={{ textAlign: "center" }}>投稿中</p>
+        </Alert>
+
+        {datas.map((value) => {
+          return (
+            <Post data={value} style={{ paddingBottom: 20 }} key={value.id} />
+          )
+        })
         }
       </div>
     )
