@@ -19,18 +19,18 @@ const Chat = () => {
     // socketRef.current = io(`new-c-app.herokuapp.com/${params.roomId}`)
     socketRef.current.on("return", (messages) => {
       setDatas(messages)
+      setSendNow(false)
     })
   }, [])
 
   const sendMessage = () => {
+    setSendNow(true)
     if (message.length > 100) {
       alert("文字数が多すぎます")
     } else if (message == "") {
       console.log("から文字")
     } else {
-      setSendNow(true)
       socketRef.current.emit("send", message)
-      setSendNow(false)
       setMessage("")
     }
   }
