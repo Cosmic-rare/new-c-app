@@ -25,6 +25,10 @@ const Chat = () => {
       setDatas(messages)
       setSendNow(false)
     })
+
+    return () => {
+      socketRef.current.disconnect()
+    }
   }, [])
 
   const sendMessage = () => {

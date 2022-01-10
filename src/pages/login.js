@@ -8,7 +8,21 @@ const Login = () => {
   const [password, setPassword] = useState("")
 
   const onClick = () => {
-
+    if (name && trip && password) {
+      axios.post("http://localhost:4000/login/", {
+        name: name,
+        trip: trip,
+        password: password
+      })
+        .then((res) => {
+          localStorage.setItem("token", res.data.token.token)
+        })
+        .catch((err) => {
+          alert("パスワードが違います")
+        })
+    } else {
+      alert("空欄があります")
+    }
   }
 
   return (

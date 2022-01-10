@@ -78,11 +78,12 @@ const verifyToken = async (token) => {
 }
 
 router.post("/", async (req, res) => {
-  if (req.body.password === PASS) {
+  const name = req.body.name
+  const trip = req.body.trip
+
+  if (req.body.password === PASS && name && trip) {
 
 
-    const name = req.body.name
-    const trip = req.body.trip
     const hashedTrip = crypto.createHash('md5').update(trip).digest('hex')
 
     if (!await existenceUser(name, hashedTrip)) {
@@ -97,7 +98,7 @@ router.post("/", async (req, res) => {
     })
 
   } else {
-    res.status(403).json({ message: "wrong password" })
+    res.status(403).json({ message: "wrong parmas" })
   }
 
 })
