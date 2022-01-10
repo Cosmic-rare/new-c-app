@@ -16,7 +16,7 @@ const Router = () => {
         <Route path="/" element={<App />}>
           <Route path="login" element={<Login />} />
 
-          <Route element={<Private auth={true} />}>
+          <Route element={<Private />}>
 
             <Route path="channels">
               <Route path=":roomId" element={<Chat />} />

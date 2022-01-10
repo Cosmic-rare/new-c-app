@@ -1,5 +1,11 @@
 import { render } from "react-dom"
-import Rotuer from "./router"
+import Router from "./router"
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { AuthProvider } from "./context/authContext"
 
-render(<Rotuer />, document.getElementById("root"))
+render(
+  <AuthProvider>
+    <Router />
+  </AuthProvider>,
+  document.getElementById("root")
+)

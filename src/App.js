@@ -1,8 +1,19 @@
 import { Outlet, Link } from "react-router-dom"
 import { Navbar, Container, Nav, Button } from "react-bootstrap"
-
+import axios from "./plugins/axios"
+import { useState } from "react"
+import { useAuthContext } from "./context/authContext"
 
 const App = () => {
+  const { token } = useAuthContext()
+
+  const logout = () => {
+    axios.post("login/logout", {
+      token: localStorage.getItem("token")
+    })
+    localStorage.removeItem("token")
+  }
+
   return (
     <div>
       <Navbar expand="lg">
@@ -15,8 +26,12 @@ const App = () => {
               <Link className="nav-link" to="/channels/928245869571112970">Channels</Link>
             </Nav>
             <div className="d-flex">
-            <Button variant="outline-success">ChangeName</Button>
-          </div>
+              {token ?
+                <Button variant="outline-success" onClick={logout}>Logout</Button>
+                :
+                <div />
+              }
+            </div>
           </Navbar.Collapse>
         </Container>
       </Navbar>

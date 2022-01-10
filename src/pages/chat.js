@@ -1,15 +1,17 @@
 import Post from "../components/Post"
 import TextareaAutosize from "react-textarea-autosize"
-import { Button, ListGroup, Alert } from "react-bootstrap"
+import { Button, Alert } from "react-bootstrap"
 import { useEffect, useRef, useState } from "react"
 import io from "socket.io-client"
 import { useParams } from "react-router-dom"
+import { useAuthContext } from "../context/authContext"
 
 
 const Chat = () => {
   const [datas, setDatas] = useState(null)
   const [message, setMessage] = useState("")
   const [sendNow, setSendNow] = useState(false)
+  const { token } = useAuthContext()
 
   let params = useParams()
   const socketRef = useRef()
@@ -17,11 +19,12 @@ const Chat = () => {
   useEffect(() => {
     socketRef.current = io(`localhost:4000/${params.roomId}`, {
       query: {
-        token: "ed7c0eff-ef13-42c8-972b-ef1fc6f16733"
+        token: token
       }
     })
     // socketRef.current = io(`new-c-app.herokuapp.com/${params.roomId}`)
     socketRef.current.on("return", (messages) => {
+      console.log(messages)
       setDatas(messages)
       setSendNow(false)
     })

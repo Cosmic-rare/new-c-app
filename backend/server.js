@@ -4,6 +4,7 @@ const cors = require("cors")
 const Token = require("./models/token")
 const mongoose = require("mongoose")
 const Post = require("./models/post")
+const User = require("./models/user")
 const io = require("socket.io")(http, {
   cors: {
     origin: "*"
@@ -19,12 +20,18 @@ const db = mongoose.connection
 db.on("error", (e) => console.log(e))
 db.once("open", () => console.log("Conecting DB"))
 
-const savePost = async (name, message, roomId) => {
-  const splitedName = name.split("$")
+const getUser = async (token) => {
+  const userId = await Token.findOne({ token: token }).exec()
+  const user = await User.findOne({ id: userId.userId }).exec()
+  return user
+}
+
+const savePost = async (message, roomId, token) => {
+  const user = await getUser(token)
   const post = new Post({
     id: await Post.count(),
-    name: splitedName[0],
-    trip: splitedName[1] ? crypto.createHash('md5').update(splitedName[1]).digest('hex').slice(0, 7) : "",
+    name: user.name,
+    trip: user.hashedTrip,
     message: message,
     createdAt: Date.now(),
     roomId: roomId
@@ -53,7 +60,6 @@ const rooms = io.of(/^\/.*$/)
 
 rooms.use(async (socket, next) => {
   let token = socket.handshake.query.token
-  console.log(await verifyToken(token))
 
   if (await verifyToken(token)) {
     return next()
@@ -68,7 +74,7 @@ rooms.on("connection", async (socket) => {
   room.emit("return", await Post.find({ roomId: roomId }).sort({ createdAt: -1 }).limit(100))
 
   socket.on("send", async (message) => {
-    await savePost("谷", message, roomId)
+    await savePost(message, roomId, socket.handshake.query.token)
     room.emit("return", await Post.find({ roomId: roomId }).sort({ createdAt: -1 }).limit(100))
   })
 

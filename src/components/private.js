@@ -1,20 +1,24 @@
-import { 
+import {
   Outlet,
   Navigate
 } from "react-router"
+import { useAuthContext } from "../context/authContext"
 
-const Private = (props) => {
-  const { auth } = props
+const Private = () => {
 
-  if(!auth) {
-    return(
+  const { token } = useAuthContext()
+
+  if (token) {
+    return (
+      <Outlet />
+    )
+  } else {
+    return (
       <Navigate to="login" />
     )
   }
 
-  return(
-    <Outlet />
-  )
+
 }
 
 export default Private
