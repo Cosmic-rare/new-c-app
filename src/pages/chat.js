@@ -15,7 +15,11 @@ const Chat = () => {
   const socketRef = useRef()
 
   useEffect(() => {
-    socketRef.current = io(`localhost:4000/${params.roomId}`)
+    socketRef.current = io(`localhost:4000/${params.roomId}`, {
+      query: {
+        token: "ed7c0eff-ef13-42c8-972b-ef1fc6f16733"
+      }
+    })
     // socketRef.current = io(`new-c-app.herokuapp.com/${params.roomId}`)
     socketRef.current.on("return", (messages) => {
       setDatas(messages)
@@ -68,7 +72,7 @@ const Chat = () => {
           </Button>
         </div>
         <hr />
-        
+
         <Alert variant="info" show={sendNow} style={{ padding: 0, border: "None" }}>
           <p style={{ textAlign: "center" }}>投稿中</p>
         </Alert>

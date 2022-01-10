@@ -1,8 +1,8 @@
 const app = require("express")()
 const http = require("http").Server(app)
 const cors = require("cors")
+const Token = require("./models/token")
 const mongoose = require("mongoose")
-const uuid = require("uuidjs")
 const Post = require("./models/post")
 const io = require("socket.io")(http, {
   cors: {
@@ -34,7 +34,33 @@ const savePost = async (name, message, roomId) => {
   return savedPost
 }
 
+const verifyToken = async (token) => {
+  const dbToken = await Token.findOne({ token: token }).exec()
+
+  if (dbToken) {
+    if (dbToken.effective < Date.now()) {
+      await logoutToken(token)
+      return false
+    } else {
+      return true
+    }
+  } else {
+    return false
+  }
+}
+
 const rooms = io.of(/^\/.*$/)
+
+rooms.use(async (socket, next) => {
+  let token = socket.handshake.query.token
+  console.log(await verifyToken(token))
+
+  if (await verifyToken(token)) {
+    return next()
+  }
+  return next(new Error("authentication error"))
+});
+
 rooms.on("connection", async (socket) => {
   const room = socket.nsp
   const roomId = room.name.slice(1)
