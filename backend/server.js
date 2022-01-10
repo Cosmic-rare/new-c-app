@@ -2,7 +2,8 @@ const app = require("express")()
 const http = require("http").Server(app)
 const cors = require("cors")
 const mongoose = require("mongoose")
-const Post = require("./model")
+const uuid = require("uuidjs")
+const Post = require("./models/post")
 const io = require("socket.io")(http, {
   cors: {
     origin: "*"
@@ -11,7 +12,7 @@ const io = require("socket.io")(http, {
 app.use(cors())
 app.use(require("express").json())
 
-let messages = []
+app.use("/login", require("./routes/login"))
 
 mongoose.connect("mongodb://localhost/c-app")
 const db = mongoose.connection
