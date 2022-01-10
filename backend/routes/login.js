@@ -52,11 +52,22 @@ const existenceUser = async (name, hashedTrip) => {
   }
 }
 
+const logoutToken = async (token) => {
+  const dbToken = await Token.findOneAndRemove({ token: token }).exec()
+
+  if (dbToken) {
+    return true
+  } else {
+    return false
+  }
+}
+
 const verifyToken = async (token) => {
   const dbToken = await Token.findOne({ token: token }).exec()
 
   if (dbToken) {
     if (dbToken.effective < Date.now()) {
+      await logoutToken(token)
       return false
     } else {
       return true
@@ -99,6 +110,17 @@ router.post("/auth", async (req, res) => {
   } else {
     res.status(400).json({ ok: false })
   }
+})
+
+
+router.post("/logout", async (req, res) => {
+  const token = await logoutToken(req.body.token)
+
+  if (token) {
+    res.status(200).json({ ok: true })
+  } else [
+    res.status(500).json({ ok: false })
+  ]
 })
 
 module.exports = router
