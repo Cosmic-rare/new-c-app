@@ -22,8 +22,11 @@ const App = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Link className="nav-link" to="/login">Login</Link>
-              <Link className="nav-link" to="/channels/928245869571112970">Channels</Link>
+              {token ?
+                <div />
+                :
+                <Link className="nav-link" to="/login">Login</Link>
+              }
             </Nav>
             <div className="d-flex">
               {token ?
